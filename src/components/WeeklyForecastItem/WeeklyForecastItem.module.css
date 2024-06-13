@@ -7,6 +7,10 @@
     border-bottom: 1px solid #a8a4d2;
 }
 
+.time, .description, .details-container {
+    flex: 1 1 100%;
+}
+
 .time {
     font-weight: 600;
 }
@@ -37,12 +41,49 @@
 }
 
 @media (max-width: 750px) {
+    .time {
+        flex: 1 1 calc(45% - 10px);
+        text-align: right;
+    }
+
+    .description {
+        flex: 1 1 calc(55% - 10px);
+        text-align: left;
+    }
+
     .weekly-forecast-item {
-        flex-direction: column;
+        flex-wrap: wrap;
         gap: 20px;
     }
 
     .details-container {
         flex-wrap: wrap;
+    }
+}
+
+@media (max-width: 525px) {
+    .weekly-forecast-item {
+        gap: 10px;
+    }
+
+    .time {
+        flex: 1 1 calc(40% - 5px);
+    }
+
+    .description {
+        flex: 1 1 calc(60% - 5px);
+    }
+
+    .description {
+        font-size: 14px;
+    }
+
+    .details-container {
+        gap: 6px;
+    }
+
+    .details-container > div {
+        width: 45px;
+        font-size: 10px;
     }
 }
