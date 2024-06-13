@@ -63,4 +63,42 @@
     align-items: flex-start;
     justify-content: flex-start;
     font-weight: 500;
+    font-size: 1rem;
+}
+
+@media (max-width: 600px) {
+    .left-side .main-info {
+        padding: 10px 0 0;
+    }
+
+    .current-weather-container {
+        justify-content: space-between;
+    }
+}
+
+@media (max-width: 560px) {
+    .left-side .main-info .weather-icon {
+        width: 70px;
+        height: 70px;
+    }
+
+    .left-side .temp {
+        font-size: 2rem;
+    }
+
+    .left-side .description {
+        font-size: 1rem;
+    }
+
+    .right-side {
+        font-size: 1rem;
+    }
+}
+
+@media (max-width: 500px) {
+    .current-weather-container {
+        padding: .8rem;
+        flex-direction: column;
+        gap: 20px;
+    }
 }
