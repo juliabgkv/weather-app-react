@@ -29,16 +29,17 @@ function WeeklyForecast({ forecast }) {
   let forecastShortcut;
 
   forecastShortcut = Object.keys(res).map((key) => {
-    let icon;
+    let icon, description;
 
     res[key].map((item) => {
-      icon = require(`../../assets/icons/${item.weather[0].icon}.png`);
-      const weatherCode = item.weather[0].id % 100;
-      if (weatherCode !== 8) {
+      const date = new Date(item.dt_txt);
+      if (date.getHours() > 9 && date.getHours() < 15) {
         icon = require(`../../assets/icons/${item.weather[0].icon}.png`);
+        description = item.weather[0].description;
       }
     });
 
+    // get max temperature
     const max = Math.max.apply(
       Math,
       res[key].map(function (item) {
@@ -46,6 +47,7 @@ function WeeklyForecast({ forecast }) {
       })
     );
 
+    // get min temperature
     const min = Math.min.apply(
       Math,
       res[key].map(function (item) {
@@ -53,6 +55,7 @@ function WeeklyForecast({ forecast }) {
       })
     );
 
+    // formatted date
     const date = new Date(res[key][0].dt_txt);
     const options = {
       weekday: "short",
@@ -60,11 +63,12 @@ function WeeklyForecast({ forecast }) {
       day: "numeric",
     };
     const dateStr = date.toLocaleDateString("en-US", options);
-    
+
     return {
       dateNum: date.getDate(),
       dateStr: dateStr,
       icon: icon,
+      description: description,
       maxTemp: Math.floor(max),
       minTemp: Math.floor(min),
     };
@@ -87,7 +91,7 @@ function WeeklyForecast({ forecast }) {
                     </div>
                   </div>
                   <div className={classes["right-side"]}>
-                    <div>weather description</div>
+                    <div>{item.description}</div>
                     <button className={classes.arrow}></button>
                   </div>
                 </AccordionItemButton>
@@ -100,10 +104,16 @@ function WeeklyForecast({ forecast }) {
                     const timeStr = date.toLocaleTimeString("en-US", {
                       hour: "2-digit",
                       minute: "2-digit",
-                      hour12: false
+                      hour12: false,
                     });
-                    
-                    return <WeeklyForecastItem key={i.dt} item={i} timeStr={timeStr} />;
+
+                    return (
+                      <WeeklyForecastItem
+                        key={i.dt}
+                        item={i}
+                        timeStr={timeStr}
+                      />
+                    );
                   })}
                 </div>
               </AccordionItemPanel>
