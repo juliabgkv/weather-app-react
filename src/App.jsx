@@ -4,6 +4,7 @@ import Search from "./components/Search/Search";
 import CurrentWeather from "./components/CurrentWeather/CurrentWeather";
 import TodaysForecast from "./components/TodaysForecast/TodaysForecast";
 import WeeklyForecast from "./components/WeeklyForecast/WeeklyForecast";
+import Footer from "./components/Footer/Footer";
 import classes from  "./App.module.css";
 
 const UNITS = "metric";
@@ -101,6 +102,7 @@ function App() {
           forecast={forecast}
         />}
       </div>
+      <Footer />
     </div>
   );
 }
