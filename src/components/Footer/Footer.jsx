@@ -14,6 +14,12 @@ function Footer() {
         </div>
       </p>
       <p>
+        Powered by
+        <a href="https://openweathermap.org/" target="_blank">
+          OpenWeather API
+        </a>
+      </p>
+      <p>
         Icons from
         <a href="https://www.flaticon.com" target="_blank">
           flaticon.com
