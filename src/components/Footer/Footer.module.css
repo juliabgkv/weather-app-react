@@ -7,10 +7,15 @@
     padding: 1rem;
 }
 
+.footer p {
+    display: flex;
+    justify-content: center;
+}
+
 .footer img {
     width: 1rem;
     height: 1rem;
-    margin: auto 5px;
+    margin: 0 5px;
 }
 
 .footer a {
@@ -18,8 +23,15 @@
     font-weight: 500;
     text-decoration: none;
     cursor: pointer;
+    margin-left: 5px;
 }
 
 .footer a:hover {
     color: var(--accent-color);
+}
+
+.developer-link a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
