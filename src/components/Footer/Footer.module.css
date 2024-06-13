@@ -1,0 +1,25 @@
+.footer {
+    font-family: "Montserrat", sans-serif;
+    font-size: .9rem;
+    color: var(--secondary-text-color);
+    text-align: center;
+    margin: 1rem auto 0;
+    padding: 1rem;
+}
+
+.footer img {
+    width: 1rem;
+    height: 1rem;
+    margin: auto 5px;
+}
+
+.footer a {
+    color: var(--primary-text-color);
+    font-weight: 500;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.footer a:hover {
+    color: var(--accent-color);
+}
