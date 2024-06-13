@@ -1,0 +1,57 @@
+.todays-forecast {
+    font-family: "Montserrat", sans-serif;
+    text-align: center;
+    color: var(--primary-text-color);
+}
+
+.title {
+    font-family: "Kanit", sans-serif;
+    font-size: 1.3rem;
+    text-transform: uppercase;
+    color: var(--accent-color);
+}
+
+.cards-container {
+    margin: 1rem 0;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+.card {
+    padding: .5rem .8rem .8rem;
+    border-radius: 10px;
+    background-color: var(--background-color);
+}
+
+.time {
+    font-size: 14px;
+    font-weight: 500;
+    opacity: .7;
+    color: var(--secondary-text-color);
+    padding-bottom: .5rem;
+    position: relative;
+}
+
+.time::after {
+    content: "";
+    width: 100%;
+    height: 1px;
+    background-color: var(--accent-color);
+    opacity: .5;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+
+.card img {
+    margin-top: .2rem;
+    width: 75px;
+    height: 75px;
+}
+
+.card .temp {
+    font-weight: 500;
+    font-size: 1.2rem;
+}

@@ -1,0 +1,40 @@
+.toggle {
+    visibility: hidden;
+}
+
+.toggle + label {
+    font-family: "Montserrat", sans-serif;
+    margin-bottom: 11px;
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+    font-weight: 500;
+    text-transform: uppercase;
+    color: var(--secondary-text-color);
+    position: relative;
+    cursor: pointer;
+}
+
+.toggle + label::before {
+    content: "";
+    height: 1rem;
+    width: 2rem;
+    border-radius: 1rem;
+    background-color: var(--toggle-bg);
+    margin-right: .5rem;
+}
+
+.toggle + label::after {
+    content: "";
+    width: .8rem;
+    height: .8rem;
+    border-radius: 50%;
+    background-color: var(--toggle-fg);
+    position: absolute;
+    left: .2rem;
+    transition: transform .1s ease-in-out;
+}
+
+.toggle:checked + label::after {
+    transform: translateX(100%);
+}

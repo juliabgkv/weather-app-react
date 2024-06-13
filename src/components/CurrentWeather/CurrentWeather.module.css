@@ -1,0 +1,66 @@
+.current-weather {
+    font-family: "Montserrat", sans-serif;
+    padding: 1rem 0;
+}
+
+.city {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--accent-color);
+}
+
+.date {
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 3px;
+    color: var(--secondary-text-color);
+}
+
+.current-weather-container {
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.left-side .main-info {
+    font-size: 2rem;
+    padding: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--primary-text-color);
+}
+
+.left-side .main-info .weather-icon {
+    width: 100px;
+    height: 100px;
+}
+
+.left-side .main-info__aside {
+    margin-left: 1rem;
+}
+
+.left-side .temp {
+    font-size: 3rem;
+    font-weight: 600;
+}
+
+.left-side .feels-temp {
+    font-size: 14px;
+    color: var(--secondary-text-color);
+}
+
+.left-side .description {
+    font-size: 1.2rem;
+}
+
+
+.right-side {
+    color: var(--primary-text-color);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    font-weight: 500;
+}
