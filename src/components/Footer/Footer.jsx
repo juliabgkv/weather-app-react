@@ -6,10 +6,12 @@ function Footer() {
     <footer className={classes.footer}>
       <p>
         Created by
-        <a href="https://github.com/juliabgkv" target="_blank">
-          <img src={githubIcon} alt="Github" />
-          juliabgkv
-        </a>
+        <div className={classes["developer-link"]}>
+          <a href="https://github.com/juliabgkv" target="_blank">
+            juliabgkv
+            <img src={githubIcon} alt="Github" />
+          </a>
+        </div>
       </p>
       <p>
         Icons from
