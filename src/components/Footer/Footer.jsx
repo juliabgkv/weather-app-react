@@ -6,14 +6,14 @@ function Footer() {
     <footer className={classes.footer}>
       <p>
         Powered by
-        <a href="https://openweathermap.org/" target="_blank">
+        <a href="https://openweathermap.org/" target="_blank" rel="noreferrer">
           OpenWeather API
         </a>
       </p>
       <p>
         Created by
         <span className={classes["developer-link"]}>
-          <a href="https://github.com/juliabgkv" target="_blank">
+          <a href="https://github.com/juliabgkv" target="_blank" rel="noreferrer">
             juliabgkv
             <img src={githubIcon} alt="Github" />
           </a>

@@ -7,79 +7,48 @@ import {
 } from "react-accessible-accordion";
 import classes from "./WeeklyForecast.module.css";
 import WeeklyForecastItem from "../WeeklyForecastItem/WeeklyForecastItem";
+import {
+  getFormattedDate,
+  getFormattedTime,
+  getMaxTemp,
+  getMinTemp,
+  groupByDay,
+} from "../../utils";
 
 function WeeklyForecast({ forecast }) {
-  const currDay = new Date().getDate();
+  const dailyForecastList = groupByDay(forecast.list);
 
-  // filter without curent forecast
-  const filteredForecast = forecast.list.filter((item) => {
-    const date = new Date(item.dt_txt);
+  delete dailyForecastList[Object.keys(dailyForecastList)[0]]; // remove current day weather (as it`s been already shown)
+  delete dailyForecastList[
+    Object.keys(dailyForecastList)[Object.keys(dailyForecastList).length - 1]
+  ]; // remove last day weather (as it`s not full)
 
-    if (currDay !== date.getDate()) {
-      return item;
-    }
-  });
+  let forecastDaySummary;
 
-  // group by day
-  const res = Object.groupBy(filteredForecast, (item) => {
-    const date = new Date(item.dt_txt);
-    return date.getDate();
-  });
-
-  let forecastShortcut;
-
-  forecastShortcut = Object.keys(res).map((key) => {
-    let icon, description;
-
-    res[key].map((item) => {
-      const date = new Date(item.dt_txt);
-      if (date.getHours() === 9) {
-        icon = require(`../../assets/icons/${item.weather[0].icon}.png`);
-        description = item.weather[0].description;
-      }
+  forecastDaySummary = Object.keys(dailyForecastList).map((key) => {
+    const middleOfTheDay = dailyForecastList[key].find(item => {
+      return (new Date(item.dt_txt).getHours() === 15);
     });
 
-    // get max temperature
-    const max = Math.max.apply(
-      Math,
-      res[key].map(function (item) {
-        return item.main.temp_max;
-      })
-    );
-
-    // get min temperature
-    const min = Math.min.apply(
-      Math,
-      res[key].map(function (item) {
-        return item.main.temp_max;
-      })
-    );
-
-    // formatted date
-    const date = new Date(res[key][0].dt_txt);
-    const options = {
-      weekday: "short",
-      month: "short",
-      day: "numeric",
-    };
-    const dateStr = date.toLocaleDateString("en-US", options);
+    const icon = require(`../../assets/icons/${middleOfTheDay.weather[0].icon}.png`);
+    const description = middleOfTheDay.weather[0].description;
 
     return {
-      dateNum: date.getDate(),
-      dateStr: dateStr,
+      dateNum: new Date(dailyForecastList[key][0].dt_txt).getDate(),
+      dateStr: getFormattedDate(dailyForecastList[key][0].dt_txt),
       icon: icon,
       description: description,
-      maxTemp: Math.floor(max),
-      minTemp: Math.floor(min),
+      maxTemp: getMaxTemp(dailyForecastList[key]),
+      minTemp: getMinTemp(dailyForecastList[key]),
     };
   });
 
   return (
     <div className={classes["weekly-forecast"]}>
-      <h3 className={classes.title}>Weekly forecast</h3>
-      {forecastShortcut && (
+      <h3 className={classes.title}>Daily forecast</h3>
+      {forecastDaySummary && (
         <Accordion allowZeroExpanded={true} className={classes.accordion}>
-          {forecastShortcut.map((item) => (
+          {forecastDaySummary.map((item) => (
             <AccordionItem key={item.dateNum}>
               <AccordionItemHeading>
                 <AccordionItemButton className={classes["accordion__button"]}>
@@ -96,26 +65,14 @@ function WeeklyForecast({ forecast }) {
                   </div>
                 </AccordionItemButton>
               </AccordionItemHeading>
-              <AccordionItemPanel>
-                <div className={classes["accordion-item-content"]}>
-                  {res[item.dateNum].map((i) => {
-                    const date = new Date(i.dt_txt);
-
-                    const timeStr = date.toLocaleTimeString("en-US", {
-                      hour: "2-digit",
-                      minute: "2-digit",
-                      hour12: false,
-                    });
-
-                    return (
-                      <WeeklyForecastItem
-                        key={i.dt}
-                        item={i}
-                        timeStr={timeStr}
-                      />
-                    );
-                  })}
-                </div>
+              <AccordionItemPanel className={classes["accordion-item-content"]}>
+                {dailyForecastList[item.dateNum].map((i) => (
+                  <WeeklyForecastItem
+                    key={i.dt}
+                    item={i}
+                    timeStr={getFormattedTime(i.dt_txt)}
+                  />
+                ))}
               </AccordionItemPanel>
             </AccordionItem>
           ))}
