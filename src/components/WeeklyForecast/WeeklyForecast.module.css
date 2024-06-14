@@ -62,15 +62,17 @@
 }
 
 .right-side {
+    min-width: 140px;
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-end;
 }
 
 .center {
+    min-width: 130px;
     display: flex;
     align-items: center;
-    gap: 10px;
+    justify-content: space-around;
 }
 
 .center img {
@@ -94,5 +96,9 @@
     .accordion__button .arrow {
         position: absolute;
         bottom: 20px;
+    }
+    
+    .right-side {
+        justify-content: center;
     }
 }
