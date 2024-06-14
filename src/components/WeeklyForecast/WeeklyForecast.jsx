@@ -33,7 +33,7 @@ function WeeklyForecast({ forecast }) {
 
     res[key].map((item) => {
       const date = new Date(item.dt_txt);
-      if (date.getHours() > 9 && date.getHours() < 15) {
+      if (date.getHours() === 9) {
         icon = require(`../../assets/icons/${item.weather[0].icon}.png`);
         description = item.weather[0].description;
       }
