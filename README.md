@@ -12,13 +12,12 @@ A simple weather application that allows users to search for the current weather
 4. Live search for city.
 5. Simple, intuitive user interface.
 6. Light and dark mode available.
+7. Current location button
 
 
 ## Future Enhancements
 
-- Add current location button
 - App option to switch between Celsius and Fahrenheit
-
 
 ## Demo
 
@@ -27,13 +26,8 @@ https://weather-app-react-snowy-five.vercel.app/
 
 ## Screenshot
 
-Dark mode:
+![App Screenshot](https://raw.githubusercontent.com/juliabgkv/weather-app-react/refs/heads/main/src/assets/screenshots/Screenshot_weather_dark.jpg)
 
-![App Screenshot](https://raw.githubusercontent.com/juliabgkv/weather-app-react/main/src/assets/screenshots/Screenshot_weather_dark.png)
-
-Default theme:
-
-![App Screenshot](https://raw.githubusercontent.com/juliabgkv/weather-app-react/main/src/assets/screenshots/Screenshot_weather_light.png)
 
 
 
