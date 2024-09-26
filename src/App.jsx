@@ -88,6 +88,18 @@ function App() {
     setIsDarkTheme((prevState) => !prevState);
   }
 
+  function handleSetCurrentLocation() {
+    if (window.navigator && window.navigator.geolocation) {
+      window.navigator.geolocation.getCurrentPosition((position) => {
+        fetchWeather(position.coords.latitude, position.coords.longitude);
+      });
+    } else {
+      alert(
+        "Geolocation is not supported by your browser. Please enable location access or use a modern browser."
+      );
+    }
+  }
+
   return (
     <div className={classes.app} data-theme={isDarkTheme ? "dark" : "light"}>
       <div className={classes.container}>
@@ -97,7 +109,14 @@ function App() {
           </h1>
           <ThemeToggle isDark={isDarkTheme} onToggleTheme={handleToggleTheme} />
         </header>
+        <div className={classes["search-bar-container"]}>
         <Search onSubmitSearchForm={handleOnSubmitSearch} />
+          <button
+            className={classes["location-btn"]}
+            onClick={handleSetCurrentLocation}
+            title="Current Location"
+          ></button>
+        </div>
         {isLoading && <LoadingSpinner />}
         {currWeather && !isLoading && (
           <Weather

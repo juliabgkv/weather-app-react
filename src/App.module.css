@@ -26,6 +26,7 @@
     font-size: 3rem;
     line-height: 3rem;
     font-weight: 600;
+    margin-right: auto;
     color: var(--primary-text-color);
 }
 
@@ -34,6 +35,26 @@
     color: var(--accent-color);
     font-size: 3rem;
     height: 3rem;
+}
+
+.location-btn {
+    height: 38px;
+    width: 38px;
+    background: var(--accent-color) url(./assets/icons8-location-60.png) center/15px 15px no-repeat;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+}
+
+.search-bar-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 5px;
+}
+
+.location-btn:hover {
+    background-color: var(--accent-color);
 }
 
 .error-message {
@@ -51,8 +72,9 @@
     .header {
         flex-direction: column;
     }
-    
-    .logo, .logo span {
+
+    .logo,
+    .logo span {
         font-size: 2rem;
     }
 }
