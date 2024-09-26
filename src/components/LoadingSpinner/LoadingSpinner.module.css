@@ -1,0 +1,6 @@
+.loader-container {
+    font-family: "Montserrat", sans-serif;
+    text-align: center;
+    margin: 50px 0 30px;
+    color: var(--secondary-text-color);
+}

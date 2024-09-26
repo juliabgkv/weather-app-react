@@ -12,7 +12,11 @@ function WeeklyForecastItem({ item, timeStr }) {
       <div className={classes.description}>{item.weather[0].description}</div>
       <div className={classes["details-container"]}>
         <div>
-          <img src={temperatureIcon} alt="Thermometer" className={classes["icon"]} />
+          <img
+            src={temperatureIcon}
+            alt="Thermometer"
+            className={classes["icon"]}
+          />
           {Math.floor(item.main.temp_max)} &deg;C
         </div>
         <div>

@@ -36,6 +36,13 @@
     height: 3rem;
 }
 
+.error-message {
+    font-family: "Kanit", sans-serif;
+    text-align: center;
+    color: var(--secondary-text-color);
+    margin: 1rem 0;
+}
+
 @media (max-width: 575px) {
     .container {
         padding: 1rem;

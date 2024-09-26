@@ -1,11 +1,10 @@
 import { useEffect, useState } from "react";
 import ThemeToggle from "./components/ThemeToggle/ThemeToggle";
 import Search from "./components/Search/Search";
-import CurrentWeather from "./components/CurrentWeather/CurrentWeather";
-import TodaysForecast from "./components/TodaysForecast/TodaysForecast";
-import WeeklyForecast from "./components/WeeklyForecast/WeeklyForecast";
 import Footer from "./components/Footer/Footer";
 import classes from "./App.module.css";
+import LoadingSpinner from "./components/LoadingSpinner/LoadingSpinner";
+import Weather from "./components/Weather";
 
 const UNITS = "metric";
 const apiUrl = process.env.REACT_APP_WEATHER_API_URL;
@@ -17,40 +16,49 @@ function App() {
   const [isDarkTheme, setIsDarkTheme] = useState(theme);
   const [currWeather, setCurrWeather] = useState(null);
   const [forecast, setForecast] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState();
 
-  function fetchWeather(latitude, longitude) {
-    const currentWeatherFetch = fetch(
-      `${apiUrl}/weather?lat=${latitude}&lon=${longitude}&units=${UNITS}&appid=${apiKey}`
-    );
-    const forecastFetch = fetch(
-      `${apiUrl}/forecast?lat=${latitude}&lon=${longitude}&units=${UNITS}&appid=${apiKey}`
-    );
+  async function fetchWeather(latitude, longitude) {
+    setIsLoading(true);
 
-    return Promise.all([currentWeatherFetch, forecastFetch])
-      .then(async (response) => {
-        const weatherData = await response[0].json();
-        const forecastData = await response[1].json();
+    try {
+      const currentWeatherFetch = fetch(
+        `${apiUrl}/weather?lat=${latitude}&lon=${longitude}&units=${UNITS}&appid=${apiKey}`
+      );
+      const forecastFetch = fetch(
+        `${apiUrl}/forecast?lat=${latitude}&lon=${longitude}&units=${UNITS}&appid=${apiKey}`
+      );
 
-        return {
-          weather: weatherData,
-          forecast: forecastData,
-        };
-      })
-      .catch((error) => console.error(error));
+      const [currentWeatherResponse, forecastResponse] = await Promise.all([
+        currentWeatherFetch,
+        forecastFetch,
+      ]);
+
+      if (!currentWeatherResponse.ok || !forecastResponse.ok) {
+        throw new Error("Failed to fetch weather or forecast data.");
+      }
+
+      const weatherData = await currentWeatherResponse.json();
+      const forecastData = await forecastResponse.json();
+
+      setCurrWeather({
+        city: `${weatherData.name}, ${weatherData.sys.country}`,
+        ...weatherData,
+      });
+      setForecast(forecastData);
+    } catch (error) {
+      console.error("Error fetching weather data:", error);
+      setError({ message: error.message });
+    } finally {
+      setIsLoading(false);
+    }
   }
 
   useEffect(() => {
     if (window.navigator && window.navigator.geolocation) {
       window.navigator.geolocation.getCurrentPosition((position) => {
-        fetchWeather(position.coords.latitude, position.coords.longitude)
-          .then((data) => {
-            setCurrWeather({
-              city: `${data.weather.name}, ${data.weather.sys.country}`,
-              ...data.weather,
-            });
-            setForecast(data.forecast);
-          })
-          .catch((error) => console.log(error));
+        fetchWeather(position.coords.latitude, position.coords.longitude);
       });
     }
   }, []);
@@ -61,13 +69,7 @@ function App() {
 
   function handleOnSubmitSearch(searchData) {
     const { latitude, longitude } = searchData.coordinates;
-
-    fetchWeather(latitude, longitude)
-      .then((data) => {
-        setCurrWeather({ city: searchData.label, ...data.weather });
-        setForecast(data.forecast);
-      })
-      .catch((error) => console.log(error));
+    fetchWeather(latitude, longitude);
   }
 
   let todaysForecast = null;
@@ -96,9 +98,17 @@ function App() {
           <ThemeToggle isDark={isDarkTheme} onToggleTheme={handleToggleTheme} />
         </header>
         <Search onSubmitSearchForm={handleOnSubmitSearch} />
-        {currWeather && <CurrentWeather data={currWeather} />}
-        {todaysForecast && <TodaysForecast todaysForecast={todaysForecast} />}
-        {forecast && <WeeklyForecast forecast={forecast} />}
+        {isLoading && <LoadingSpinner />}
+        {currWeather && !isLoading && (
+          <Weather
+            currWeather={currWeather}
+            todaysForecast={todaysForecast}
+            forecast={forecast}
+          />
+        )}
+        {!isLoading && error && (
+          <p className={classes["error-message"]}>{error.message}</p>
+        )}
       </div>
       <Footer />
     </div>
