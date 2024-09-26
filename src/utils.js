@@ -1,8 +1,15 @@
-export function groupByDay(list) {
-  return Object.groupBy(list, (item) => {
-    const date = new Date(item.dt_txt);
-    return date.getDate();
-  });
+export function groupForecastByDays(forecasts) {
+  return forecasts.reduce((grouped, forecast) => {
+    const date = forecast.dt_txt.split(" ")[0];
+
+    if (!grouped[date]) {
+      grouped[date] = [];
+    }
+
+    grouped[date].push(forecast);
+
+    return grouped;
+  }, {});
 }
 
 export function getMaxTemp(list) {
