@@ -10,12 +10,18 @@ import WeeklyForecastItem from "../WeeklyForecastItem/WeeklyForecastItem";
 import {
   getFormattedDate,
   getFormattedTime,
+  getHighestPriorityWeather,
   getMaxTemp,
   getMinTemp,
+  getRepresentativeIcon,
   groupForecastByDays,
 } from "../../utils";
 
 function WeeklyForecast({ forecast }) {
+  if (!forecast || !forecast.list || !forecast.list.length) {
+    return null;
+  }
+
   const dailyForecastList = groupForecastByDays(forecast.list);
 
   delete dailyForecastList[Object.keys(dailyForecastList)[0]]; // remove current day weather (as it`s been already shown)
@@ -28,12 +34,12 @@ function WeeklyForecast({ forecast }) {
   forecastDaySummary = Object.keys(dailyForecastList).map((key) => {
     const currForecastItem = dailyForecastList[key];
 
-    const middleOfTheDay = currForecastItem.find((item) => {
-      return new Date(item.dt_txt).getHours() === 15;
-    });
+    const representativeWeather = getHighestPriorityWeather(currForecastItem);
 
-    const icon = require(`../../assets/icons/${middleOfTheDay.weather[0].icon}.png`);
-    const description = middleOfTheDay.weather[0].description;
+    let iconCode = getRepresentativeIcon(representativeWeather.weather[0].icon);
+    const icon = require(`../../assets/icons/${iconCode}.png`);
+
+    const description = representativeWeather.weather[0].description;
 
     return {
       dateKey: currForecastItem[0].dt_txt.split(" ")[0],
@@ -50,25 +56,25 @@ function WeeklyForecast({ forecast }) {
       <h3 className={classes.title}>Daily forecast</h3>
       {forecastDaySummary && (
         <Accordion allowZeroExpanded={true} className={classes.accordion}>
-          {forecastDaySummary.map((item) => (
-            <AccordionItem key={item.dateKey}>
+          {forecastDaySummary.map(({ dateKey, dateStr, icon, description, maxTemp, minTemp }) => (
+            <AccordionItem key={dateKey}>
               <AccordionItemHeading>
                 <AccordionItemButton className={classes["accordion__button"]}>
-                  <div className={classes["left-side"]}>{item.dateStr}</div>
+                  <div className={classes["left-side"]}>{dateStr}</div>
                   <div className={classes.center}>
-                    <img src={item.icon} alt="Weather icon" />
+                    <img src={icon} alt="Weather icon" />
                     <div>
-                      {item.maxTemp} / {item.minTemp}&deg;C
+                      {maxTemp} / {minTemp}&deg;C
                     </div>
                   </div>
                   <div className={classes["right-side"]}>
-                    <div>{item.description}</div>
+                    <div>{description}</div>
                     <button className={classes.arrow}></button>
                   </div>
                 </AccordionItemButton>
               </AccordionItemHeading>
               <AccordionItemPanel className={classes["accordion-item-content"]}>
-                {dailyForecastList[item.dateKey].map((i) => (
+                {dailyForecastList[dateKey].map((i) => (
                   <WeeklyForecastItem
                     key={i.dt}
                     item={i}

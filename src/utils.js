@@ -1,3 +1,12 @@
+const weatherPriority = {
+  Thunderstorm: 5,
+  Drizzle: 4,
+  Rain: 3,
+  Snow: 2,
+  Clear: 1,
+  Clouds: 0,
+};
+
 export function groupForecastByDays(forecasts) {
   return forecasts.reduce((grouped, forecast) => {
     const date = forecast.dt_txt.split(" ")[0];
@@ -55,4 +64,21 @@ export function getFormattedTime(dtTxt) {
   };
 
   return date.toLocaleTimeString("en-US", options);
+}
+
+export function getHighestPriorityWeather(forecastItems) {
+  return forecastItems.reduce((highest, item) => {
+    const priority = weatherPriority[item.weather[0].main] || 0;
+    if (
+      !highest ||
+      priority > (weatherPriority[highest.weather[0].main] || 0)
+    ) {
+      return item;
+    }
+    return highest;
+  }, null);
+}
+
+export function getRepresentativeIcon(iconCode) {
+  return iconCode.endsWith("n") ? iconCode.replace("n", "d") : iconCode;
 }
