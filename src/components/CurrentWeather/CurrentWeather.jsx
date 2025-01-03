@@ -41,10 +41,26 @@ function CurrentWeather({ data }) {
           </div>
         </div>
         <div className={classes["right-side"]}>
-          <div>Clouds: {data.clouds.all}%</div>
-          <div>Preassure: {data.main.pressure} hPa</div>
-          <div>Humidity: {data.main.humidity} &#37;</div>
-          <div>Wind: {data.wind.speed} m/s</div>
+          <div className={classes.clouds}>
+            <span className={classes["right-side-icons"]}></span>
+            <span className={classes["right-side-title"]}>Clouds:</span>
+            {data.clouds.all} %
+          </div>
+          <div className={classes.pressure}>
+            <span className={classes["right-side-icons"]}></span>
+            <span className={classes["right-side-title"]}>Preassure:</span>
+            {data.main.pressure} hPa
+          </div>
+          <div className={classes.humidity}>
+            <span className={classes["right-side-icons"]}></span>
+            <span className={classes["right-side-title"]}>Humidity:</span>
+            {data.main.humidity} %
+          </div>
+          <div className={classes.wind}>
+            <span className={classes["right-side-icons"]}></span>
+            <span className={classes["right-side-title"]}>Wind:</span>
+            {data.wind.speed} m/s
+          </div>
         </div>
       </div>
     </div>
