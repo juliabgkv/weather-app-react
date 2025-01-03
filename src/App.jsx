@@ -19,7 +19,7 @@ function App() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState();
 
-  async function fetchWeather(latitude, longitude) {
+  async function fetchWeather(latitude, longitude, city = null) {
     setIsLoading(true);
 
     try {
@@ -43,7 +43,7 @@ function App() {
       const forecastData = await forecastResponse.json();
 
       setCurrWeather({
-        city: `${weatherData.name}, ${weatherData.sys.country}`,
+        city: city ? city : `${weatherData.name}, ${weatherData.sys.country}`,
         ...weatherData,
       });
       setForecast(forecastData);
@@ -69,7 +69,7 @@ function App() {
 
   function handleOnSubmitSearch(searchData) {
     const { latitude, longitude } = searchData.coordinates;
-    fetchWeather(latitude, longitude);
+    fetchWeather(latitude, longitude, searchData.label);
   }
 
   let todaysForecast = null;
