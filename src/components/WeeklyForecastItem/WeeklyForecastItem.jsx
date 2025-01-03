@@ -4,8 +4,11 @@ import cloudIcon from "../../assets/cloud.png";
 import windyIcon from "../../assets/windy.png";
 import humidityIcon from "../../assets/humidity.png";
 import classes from "./WeeklyForecastItem.module.css";
+import { useUnit } from "../../store/UnitContext";
 
 function WeeklyForecastItem({ item, timeStr }) {
+  const { unit } = useUnit();
+
   const icon = require(`../../assets/icons/${item.weather[0].icon}.png`);
 
   return (
@@ -24,11 +27,11 @@ function WeeklyForecastItem({ item, timeStr }) {
             alt="Thermometer"
             className={classes["icon"]}
           />
-          {Math.floor(item.main.temp_max)} &deg;C
+          {Math.floor(item.main.temp_max)} {unit === "metric" ? "°C" : "°F"}
         </div>
         <div>
           <img src={windyIcon} alt="Windy" className={classes["icon"]} />
-          {item.wind.speed} m/s
+          {item.wind.speed} {unit === "metric" ? "m/s" : "mph"}
         </div>
         <div>
           <img src={humidityIcon} alt="Humidity" className={classes["icon"]} />

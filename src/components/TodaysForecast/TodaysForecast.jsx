@@ -1,7 +1,10 @@
+import { useUnit } from "../../store/UnitContext";
 import { getFormattedTime } from "../../utils";
 import classes from "./TodaysForecast.module.css";
 
 function TodaysForecast({ todaysForecast }) {
+  const {unit} = useUnit();
+
   return (
     <div className={classes["todays-forecast"]}>
       <h3 className={classes.title}>Horly forecast</h3>
@@ -16,7 +19,7 @@ function TodaysForecast({ todaysForecast }) {
               </div>
               <img src={icon} alt={item.weather[0].description} />
               <div className={classes.temp}>
-                {Math.floor(item.main.temp)} &deg;C
+                {Math.floor(item.main.temp)}{unit === "metric" ? "°C" : "°F"}
               </div>
             </div>
           );

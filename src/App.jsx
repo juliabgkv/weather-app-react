@@ -1,18 +1,20 @@
 import { useEffect, useState } from "react";
+import { useUnit } from "./store/UnitContext";
 import ThemeToggle from "./components/ThemeToggle/ThemeToggle";
 import Search from "./components/Search/Search";
 import Footer from "./components/Footer/Footer";
 import classes from "./App.module.css";
 import LoadingSpinner from "./components/LoadingSpinner/LoadingSpinner";
 import Weather from "./components/Weather";
+import UnitToggler from "./components/UnitToggler/UnitToggler";
 
-const UNITS = "metric";
 const apiUrl = process.env.REACT_APP_WEATHER_API_URL;
 const apiKey = process.env.REACT_APP_WEATHER_API_KEY;
 
 const theme = JSON.parse(localStorage.getItem("isDarkTheme")) || false;
 
 function App() {
+  const { unit } = useUnit();
   const [isDarkTheme, setIsDarkTheme] = useState(theme);
   const [currWeather, setCurrWeather] = useState(null);
   const [forecast, setForecast] = useState(null);
@@ -24,10 +26,10 @@ function App() {
 
     try {
       const currentWeatherFetch = fetch(
-        `${apiUrl}/weather?lat=${latitude}&lon=${longitude}&units=${UNITS}&appid=${apiKey}`
+        `${apiUrl}/weather?lat=${latitude}&lon=${longitude}&units=${unit}&appid=${apiKey}`
       );
       const forecastFetch = fetch(
-        `${apiUrl}/forecast?lat=${latitude}&lon=${longitude}&units=${UNITS}&appid=${apiKey}`
+        `${apiUrl}/forecast?lat=${latitude}&lon=${longitude}&units=${unit}&appid=${apiKey}`
       );
 
       const [currentWeatherResponse, forecastResponse] = await Promise.all([
@@ -66,6 +68,13 @@ function App() {
   useEffect(() => {
     localStorage.setItem("isDarkTheme", isDarkTheme);
   }, [isDarkTheme]);
+
+  useEffect(() => {
+    if (currWeather) {
+      const { coord } = currWeather;
+      fetchWeather(coord.lat, coord.lon);
+    }
+  }, [unit]);
 
   function handleOnSubmitSearch(searchData) {
     const { latitude, longitude } = searchData.coordinates;
@@ -110,13 +119,14 @@ function App() {
           <ThemeToggle isDark={isDarkTheme} onToggleTheme={handleToggleTheme} />
         </header>
         <div className={classes["search-bar-container"]}>
-        <Search onSubmitSearchForm={handleOnSubmitSearch} />
+          <Search onSubmitSearchForm={handleOnSubmitSearch} />
           <button
             className={classes["location-btn"]}
             onClick={handleSetCurrentLocation}
             title="Current Location"
           ></button>
         </div>
+        <UnitToggler />
         {isLoading && <LoadingSpinner />}
         {currWeather && !isLoading && (
           <Weather

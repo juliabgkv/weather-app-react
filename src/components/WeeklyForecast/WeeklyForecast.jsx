@@ -16,8 +16,11 @@ import {
   getRepresentativeIcon,
   groupForecastByDays,
 } from "../../utils";
+import { useUnit } from "../../store/UnitContext";
 
 function WeeklyForecast({ forecast }) {
+  const { unit } = useUnit();
+  
   if (!forecast || !forecast.list || !forecast.list.length) {
     return null;
   }
@@ -67,7 +70,8 @@ function WeeklyForecast({ forecast }) {
                       {description}
                     </div>
                     <div className={classes["right-side"]}>
-                      {maxTemp} / {minTemp}&deg;C
+                      {maxTemp} / {minTemp}
+                      {unit === "metric" ? "°C" : "°F"}
                       <button className={classes.arrow}></button>
                     </div>
                   </AccordionItemButton>

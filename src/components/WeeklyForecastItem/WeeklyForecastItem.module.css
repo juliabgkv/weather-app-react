@@ -22,6 +22,7 @@
 }
 
 .description {
+    text-align: left;
     color: var(--secondary-text-color);
     display: flex;
     align-items: center;

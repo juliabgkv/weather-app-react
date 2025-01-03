@@ -1,6 +1,8 @@
+import { useUnit } from "../../store/UnitContext";
 import classes from "./CurrentWeather.module.css";
 
 function CurrentWeather({ data }) {
+  const { unit } = useUnit();
   const icon = require(`../../assets/icons/${data.weather[0].icon}.png`);
 
   const date = new Date(data.dt * 1000);
@@ -28,13 +30,13 @@ function CurrentWeather({ data }) {
               />
               <div className={classes["main-info__aside"]}>
                 <div className={classes.temp}>
-                  {Math.floor(data.main?.temp)}&deg;C
+                  {Math.floor(data.main?.temp)}{unit === "metric" ? "°C" : "°F"}
                 </div>
                 <div className={classes.description}>
                   {data.weather[0].description}
                 </div>
                 <div className={classes["feels-temp"]}>
-                  feels like: {Math.floor(data.main.feels_like)}&deg;C
+                  feels like: {Math.floor(data.main.feels_like)}{unit === "metric" ? "°C" : "°F"}
                 </div>
               </div>
             </div>
@@ -59,7 +61,7 @@ function CurrentWeather({ data }) {
           <div className={classes.wind}>
             <span className={classes["right-side-icons"]}></span>
             <span className={classes["right-side-title"]}>Wind:</span>
-            {data.wind.speed} m/s
+            {data.wind.speed} {unit === "metric" ? "m/s" : "mph"}
           </div>
         </div>
       </div>

@@ -1,4 +1,5 @@
 .search {
     font-family: "Montserrat", sans-serif;
     width: 100%;
+    z-index: 3;
 }
