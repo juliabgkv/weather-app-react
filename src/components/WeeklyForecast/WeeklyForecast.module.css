@@ -62,15 +62,8 @@
     font-weight: 600;
 }
 
-.right-side {
-    min-width: 180px;
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-}
-
 .center {
-    min-width: 130px;
+    min-width: 180px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -80,6 +73,13 @@
     width: 30px;
     height: 30px;
     margin-right: 10px;
+}
+
+.right-side {
+    min-width: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 @media (max-width: 750px) {
@@ -92,15 +92,19 @@
     .accordion__button {
         position: relative;
         flex-direction: column;
-        padding-bottom: 50px;
+        padding-bottom: 40px;
     }
     
     .accordion__button .arrow {
         position: absolute;
-        bottom: 20px;
+        bottom: 10px;
     }
     
     .right-side {
         justify-content: center;
+    }
+
+    .center {
+        margin: 5px 0;
     }
 }

@@ -6,10 +6,17 @@ import humidityIcon from "../../assets/humidity.png";
 import classes from "./WeeklyForecastItem.module.css";
 
 function WeeklyForecastItem({ item, timeStr }) {
+  const icon = require(`../../assets/icons/${item.weather[0].icon}.png`);
+
   return (
     <div className={classes["weekly-forecast-item"]}>
       <div className={classes.time}>{timeStr}</div>
-      <div className={classes.description}>{item.weather[0].description}</div>
+      <div className={classes.description}>
+        <div className={classes["weather-icon-container"]}>
+          <img src={icon} alt={item.weather[0].description} />
+        </div>
+        {item.weather[0].description}
+      </div>
       <div className={classes["details-container"]}>
         <div>
           <img

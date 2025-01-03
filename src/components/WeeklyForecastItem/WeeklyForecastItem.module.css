@@ -16,8 +16,16 @@
     font-weight: 600;
 }
 
+.weather-icon-container img { 
+    width: 25px;
+    height: 25px;
+}
+
 .description {
     color: var(--secondary-text-color);
+    display: flex;
+    align-items: center;
+    gap: 10px;
 }
 
 .details-container {

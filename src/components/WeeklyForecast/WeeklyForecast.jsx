@@ -56,34 +56,36 @@ function WeeklyForecast({ forecast }) {
       <h3 className={classes.title}>Daily forecast</h3>
       {forecastDaySummary && (
         <Accordion allowZeroExpanded={true} className={classes.accordion}>
-          {forecastDaySummary.map(({ dateKey, dateStr, icon, description, maxTemp, minTemp }) => (
-            <AccordionItem key={dateKey}>
-              <AccordionItemHeading>
-                <AccordionItemButton className={classes["accordion__button"]}>
-                  <div className={classes["left-side"]}>{dateStr}</div>
-                  <div className={classes.center}>
-                    <img src={icon} alt="Weather icon" />
-                    <div>
-                      {maxTemp} / {minTemp}&deg;C
+          {forecastDaySummary.map(
+            ({ dateKey, dateStr, icon, description, maxTemp, minTemp }) => (
+              <AccordionItem key={dateKey}>
+                <AccordionItemHeading>
+                  <AccordionItemButton className={classes["accordion__button"]}>
+                    <div className={classes["left-side"]}>{dateStr}</div>
+                    <div className={classes.center}>
+                      <img src={icon} alt="Weather icon" />
+                      {description}
                     </div>
-                  </div>
-                  <div className={classes["right-side"]}>
-                    <div>{description}</div>
-                    <button className={classes.arrow}></button>
-                  </div>
-                </AccordionItemButton>
-              </AccordionItemHeading>
-              <AccordionItemPanel className={classes["accordion-item-content"]}>
-                {dailyForecastList[dateKey].map((i) => (
-                  <WeeklyForecastItem
-                    key={i.dt}
-                    item={i}
-                    timeStr={getFormattedTime(i.dt_txt)}
-                  />
-                ))}
-              </AccordionItemPanel>
-            </AccordionItem>
-          ))}
+                    <div className={classes["right-side"]}>
+                      {maxTemp} / {minTemp}&deg;C
+                      <button className={classes.arrow}></button>
+                    </div>
+                  </AccordionItemButton>
+                </AccordionItemHeading>
+                <AccordionItemPanel
+                  className={classes["accordion-item-content"]}
+                >
+                  {dailyForecastList[dateKey].map((i) => (
+                    <WeeklyForecastItem
+                      key={i.dt}
+                      item={i}
+                      timeStr={getFormattedTime(i.dt_txt)}
+                    />
+                  ))}
+                </AccordionItemPanel>
+              </AccordionItem>
+            )
+          )}
         </Accordion>
       )}
     </div>
