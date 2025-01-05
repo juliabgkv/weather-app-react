@@ -58,11 +58,9 @@ function App() {
   }
 
   useEffect(() => {
-    if (window.navigator && window.navigator.geolocation) {
-      window.navigator.geolocation.getCurrentPosition((position) => {
-        fetchWeather(position.coords.latitude, position.coords.longitude);
-      });
-    }
+    getCurrLocation((position) => {
+      fetchWeather(position.coords.latitude, position.coords.longitude);
+    });
   }, []);
 
   useEffect(() => {
@@ -75,6 +73,15 @@ function App() {
       fetchWeather(coord.lat, coord.lon);
     }
   }, [unit]);
+
+  function getCurrLocation(successCallback, errorCallback) {
+    if (window.navigator && window.navigator.geolocation) {
+      window.navigator.geolocation.getCurrentPosition(
+        successCallback,
+        errorCallback
+      );
+    }
+  }
 
   function handleOnSubmitSearch(searchData) {
     const { latitude, longitude } = searchData.coordinates;
@@ -98,15 +105,16 @@ function App() {
   }
 
   function handleSetCurrentLocation() {
-    if (window.navigator && window.navigator.geolocation) {
-      window.navigator.geolocation.getCurrentPosition((position) => {
+    getCurrLocation(
+      (position) => {
         fetchWeather(position.coords.latitude, position.coords.longitude);
-      });
-    } else {
-      alert(
-        "Geolocation is not supported by your browser. Please enable location access or use a modern browser."
-      );
-    }
+      },
+      () => {
+        alert(
+          "Unable to fetch your location. Please ensure location services are enabled."
+        );
+      }
+    );
   }
 
   return (
