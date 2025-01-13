@@ -1,51 +1,40 @@
 import { useEffect, useState } from "react";
-import { useUnit } from "./store/UnitContext";
 import ThemeToggle from "./components/ThemeToggle/ThemeToggle";
 import Search from "./components/Search/Search";
 import Footer from "./components/Footer/Footer";
-import classes from "./App.module.css";
 import LoadingSpinner from "./components/LoadingSpinner/LoadingSpinner";
 import Weather from "./components/Weather";
 import UnitToggler from "./components/UnitToggler/UnitToggler";
+import { useUnit } from "./store/UnitContext";
+import { fetchWeatherData } from "./api/weather";
+import { getTodaysForecast } from "./utils/forecast";
+import classes from "./App.module.css";
 
-const apiUrl = process.env.REACT_APP_WEATHER_API_URL;
-const apiKey = process.env.REACT_APP_WEATHER_API_KEY;
-
-const theme = JSON.parse(localStorage.getItem("isDarkTheme")) || false;
+const theme = JSON.parse(localStorage.getItem("isDarkTheme")) ?? false;
 
 function App() {
   const { unit } = useUnit();
   const [isDarkTheme, setIsDarkTheme] = useState(theme);
   const [currWeather, setCurrWeather] = useState(null);
   const [forecast, setForecast] = useState(null);
+  const [city, setCity] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState();
 
-  async function fetchWeather(latitude, longitude, city = null) {
+  async function fetchWeather(latitude, longitude, cityName = null) {
     setIsLoading(true);
+    setError(null);
 
     try {
-      const currentWeatherFetch = fetch(
-        `${apiUrl}/weather?lat=${latitude}&lon=${longitude}&units=${unit}&appid=${apiKey}`
+      const { weatherData, forecastData } = await fetchWeatherData(
+        latitude,
+        longitude,
+        unit
       );
-      const forecastFetch = fetch(
-        `${apiUrl}/forecast?lat=${latitude}&lon=${longitude}&units=${unit}&appid=${apiKey}`
-      );
 
-      const [currentWeatherResponse, forecastResponse] = await Promise.all([
-        currentWeatherFetch,
-        forecastFetch,
-      ]);
-
-      if (!currentWeatherResponse.ok || !forecastResponse.ok) {
-        throw new Error("Failed to fetch weather or forecast data.");
-      }
-
-      const weatherData = await currentWeatherResponse.json();
-      const forecastData = await forecastResponse.json();
-
+      setCity(cityName || `${weatherData.name}, ${weatherData.sys.country}`);
       setCurrWeather({
-        city: city ? city : `${weatherData.name}, ${weatherData.sys.country}`,
+        city: cityName || `${weatherData.name}, ${weatherData.sys.country}`,
         ...weatherData,
       });
       setForecast(forecastData);
@@ -59,7 +48,8 @@ function App() {
 
   useEffect(() => {
     getCurrLocation((position) => {
-      fetchWeather(position.coords.latitude, position.coords.longitude);
+      const { latitude, longitude } = position.coords;
+      fetchWeather(latitude, longitude);
     });
   }, []);
 
@@ -68,11 +58,11 @@ function App() {
   }, [isDarkTheme]);
 
   useEffect(() => {
-    if (currWeather) {
+    if (city && currWeather) {
       const { coord } = currWeather;
-      fetchWeather(coord.lat, coord.lon);
+      fetchWeather(coord.lat, coord.lon, city);
     }
-  }, [unit]);
+  }, [city, unit]);
 
   function getCurrLocation(successCallback, errorCallback) {
     if (window.navigator && window.navigator.geolocation) {
@@ -84,20 +74,9 @@ function App() {
   }
 
   function handleOnSubmitSearch(searchData) {
-    const { latitude, longitude } = searchData.coordinates;
-    fetchWeather(latitude, longitude, searchData.label);
-  }
-
-  let todaysForecast = null;
-
-  if (forecast) {
-    const currDate = new Date();
-
-    todaysForecast = forecast.list.filter((forecast) => {
-      const date = new Date(forecast.dt_txt);
-
-      return currDate.getDate() === date.getDate();
-    });
+    const { latitude, longitude, label } = searchData;
+    setCity(label);
+    fetchWeather(latitude, longitude, label);
   }
 
   function handleToggleTheme() {
@@ -107,7 +86,8 @@ function App() {
   function handleSetCurrentLocation() {
     getCurrLocation(
       (position) => {
-        fetchWeather(position.coords.latitude, position.coords.longitude);
+        const { latitude, longitude } = position.coords;
+        fetchWeather(latitude, longitude);
       },
       () => {
         alert(
@@ -115,6 +95,12 @@ function App() {
         );
       }
     );
+  }
+
+  let todaysForecast = null;
+
+  if (forecast) {
+    todaysForecast = getTodaysForecast(forecast.list);
   }
 
   return (
@@ -132,20 +118,19 @@ function App() {
             className={classes["location-btn"]}
             onClick={handleSetCurrentLocation}
             title="Current Location"
+            aria-label="Use Current Location"
           ></button>
         </div>
         <UnitToggler />
-        {isLoading && <LoadingSpinner />}
-        {currWeather && !isLoading && (
+        {!isLoading && currWeather ? (
           <Weather
             currWeather={currWeather}
             todaysForecast={todaysForecast}
             forecast={forecast}
           />
-        )}
-        {!isLoading && error && (
-          <p className={classes["error-message"]}>{error.message}</p>
-        )}
+        ) : isLoading ? (
+          <LoadingSpinner />
+        ) : null}
       </div>
       <Footer />
     </div>
