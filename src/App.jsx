@@ -67,16 +67,25 @@ function App() {
   function getCurrLocation(successCallback, errorCallback) {
     if (window.navigator && window.navigator.geolocation) {
       window.navigator.geolocation.getCurrentPosition(
-        successCallback,
-        errorCallback
+        (pos) => {
+          console.log("Position retrieved:", pos);
+          successCallback(pos);
+        },
+        (err) => {
+          console.error("Error getting location:", err);
+          errorCallback && errorCallback(err);
+        }
       );
+    } else {
+      console.error("Geolocation is not supported by this browser.");
+      errorCallback && errorCallback({ message: "Geolocation not supported" });
     }
   }
 
   function handleOnSubmitSearch(searchData) {
-    const { latitude, longitude, label } = searchData;
+    const { coordinates, label } = searchData;
     setCity(label);
-    fetchWeather(latitude, longitude, label);
+    fetchWeather(coordinates.latitude, coordinates.longitude, label);
   }
 
   function handleToggleTheme() {
@@ -122,15 +131,17 @@ function App() {
           ></button>
         </div>
         <UnitToggler />
-        {!isLoading && currWeather ? (
+        {!isLoading && currWeather && (
           <Weather
             currWeather={currWeather}
             todaysForecast={todaysForecast}
             forecast={forecast}
           />
-        ) : isLoading ? (
-          <LoadingSpinner />
-        ) : null}
+        )}
+        {isLoading && <LoadingSpinner />}
+        {!isLoading && error && (
+          <p className={classes["error-message"]}>{error.message}</p>
+        )}
       </div>
       <Footer />
     </div>
